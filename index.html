@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Leitfragen Nationalpark – Kärtchen</title>
+<style>
+:root{
+  --stein:#EFEDE6;
+  --stein-tief:#E3E0D5;
+  --tinte:#1E241F;
+  --schatten:#5D6558;
+  --flechte:#6F8118;
+  --flechte-hell:#C8D486;
+  --hirsch:#96401C;
+  --linie:#C6C3B6;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --serif:Georgia,"Iowan Old Style","Times New Roman",serif;
+  --mono:ui-monospace,"SF Mono",SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--stein);color:var(--tinte);
+  font-family:var(--serif);line-height:1.5;
+  padding:0 16px 72px;
+}
+.wrap{max-width:760px;margin:0 auto}
+
+/* ---------- Kopf ---------- */
+header{padding:34px 0 22px;border-bottom:2px solid var(--tinte)}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--schatten);margin:0 0 12px
+}
+h1{
+  font-family:var(--sans);font-weight:800;letter-spacing:-.035em;
+  font-size:clamp(38px,12vw,68px);line-height:.92;margin:0;
+}
+h1 em{font-style:normal;color:var(--flechte)}
+.intro{margin:14px 0 0;font-size:16px;max-width:46ch;color:var(--tinte)}
+
+/* ---------- Filter ---------- */
+.filter{display:flex;flex-wrap:wrap;gap:6px;padding:18px 0 4px}
+.filter button{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;
+  background:none;border:1px solid var(--linie);color:var(--schatten);
+  padding:9px 12px;border-radius:0;cursor:pointer;min-height:38px;
+}
+.filter button[aria-pressed="true"]{background:var(--tinte);border-color:var(--tinte);color:var(--stein)}
+.filter button.wuerfel{border-color:var(--flechte);color:var(--flechte)}
+.filter button:focus-visible{outline:2px solid var(--flechte);outline-offset:2px}
+.zaehler{font-family:var(--mono);font-size:11px;color:var(--schatten);padding:10px 0 0;letter-spacing:.08em}
+
+/* ---------- Karten ---------- */
+.karten{display:grid;gap:14px;padding-top:14px}
+@media(min-width:680px){.karten{grid-template-columns:1fr 1fr}}
+
+.karte{
+  position:relative;background:#F7F6F1;border:1px solid var(--linie);
+  padding:20px 18px 18px;
+}
+.karte.offen{background:#fff;border-color:var(--tinte)}
+.karte.treffer{animation:blink 1.1s ease}
+@keyframes blink{0%,100%{background:#fff}35%{background:var(--flechte-hell)}}
+
+/* Vermessungsmarken: die Signatur der Dauerbeobachtungsfläche */
+.karte::before,.karte::after{
+  content:"";position:absolute;width:11px;height:11px;pointer-events:none;
+  border:2px solid var(--flechte);transition:opacity .2s
+}
+.karte::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.karte::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+
+.kopfzeile{display:flex;align-items:baseline;gap:10px;margin-bottom:10px}
+.code{font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:.12em;color:var(--flechte)}
+.gruppe{font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--schatten)}
+
+.frage{
+  font-family:var(--sans);font-weight:700;letter-spacing:-.015em;
+  font-size:18px;line-height:1.26;margin:0;
+  background:none;border:0;padding:0;text-align:left;color:inherit;
+  cursor:pointer;width:100%;
+}
+.frage:focus-visible{outline:2px solid var(--flechte);outline-offset:4px}
+
+.hinweis{
+  font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--schatten);margin-top:12px
+}
+
+.inhalt{display:none;margin-top:18px;border-top:1px solid var(--linie);padding-top:16px}
+.karte.offen .inhalt{display:block}
+.feld+.feld{margin-top:16px}
+.feldtitel{
+  font-family:var(--mono);font-size:10px;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--flechte);margin:0 0 6px
+}
+.ort{margin:0;font-size:15px}
+ul{margin:0;padding-left:18px}
+li{margin:0 0 6px;font-size:15px}
+li::marker{color:var(--linie)}
+.reden li{border-left:2px solid var(--hirsch);margin-left:-18px;padding-left:14px;list-style:none}
+
+footer{
+  margin-top:40px;padding-top:16px;border-top:1px solid var(--linie);
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--schatten);line-height:1.7
+}
+
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ---------- Druck: echte Kärtchen zum Ausschneiden ---------- */
+@media print{
+  body{background:#fff;padding:0}
+  header,.filter,.zaehler,footer{display:none}
+  .karten{display:block}
+  .karte{
+    page-break-inside:avoid;border:1px dashed #999;margin:0 0 8mm;padding:8mm;background:#fff
+  }
+  .karte::before,.karte::after{border-color:#000}
+  .inhalt{display:block!important}
+  .hinweis{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Schweizerischer Nationalpark · Herbst</p>
+  <h1>16 Leit<em>fragen</em></h1>
+  <p class="intro">Wählt eine Karte. Zwei Personen bereiten sie vor und stellen ihren Lösungsvorschlag unterwegs am passenden Ort vor. Antworten stehen hier keine – die müsst ihr selber finden.</p>
+</header>
+
+<nav class="filter" id="filter" aria-label="Nach Thema filtern"></nav>
+<p class="zaehler" id="zaehler"></p>
+
+<main class="karten" id="karten"></main>
+
+<footer>
+  5 Minuten pro Karte · beide sprechen · nicht vorlesen<br>
+  «Wir wissen es nicht genau» ist eine gültige Antwort, wenn ihr sagt, woran es liegt.
+</footer>
+
+</div>
+
+<script>
+const KARTEN = [
+ {code:"TI 1",gruppe:"Tiere",
+  frage:"Hirsche werfen ihr Geweih jedes Jahr ab. Warum liegen nicht Unmengen von Geweihstangen im Nationalpark herum?",
+  ort:"Alp Stabelchod oder offene Fläche im Val Trupchun",
+  sehen:["Sucht am Wegrand nach Knochen-, Geweih- oder Zahnresten. Nichts mitnehmen, nur fotografieren.","Prüft eure Funde auf Nagespuren: parallele Rillen, abgerundete Kanten."],
+  reden:["Calcium und Phosphor sind hier knapp. Wer im Park profitiert davon, wenn ein Geweih liegen bleibt?","Ausserhalb sammeln Menschen Geweihstangen, hier ist das verboten. Müssten drinnen also nicht mehr liegen?","Die Frage unterstellt, dass hier viele Stangen liegen müssten. Stimmt diese Annahme überhaupt?"]},
+
+ {code:"TI 2",gruppe:"Tiere",
+  frage:"Warum röhren die Hirsche ausgerechnet jetzt – und warum lassen sie uns hier so nahe heran?",
+  ort:"Aussichtspunkt Val Trupchun, früher Morgen oder Abend",
+  sehen:["Beobachtet zehn Minuten und schätzt, ab welcher Distanz die Tiere auf euch reagieren.","Notiert Uhrzeit, Wetter, Anzahl Tiere und was sie gerade tun."],
+  reden:["Röhren macht einen Hirsch weithin hörbar, auch für Wölfe. Warum lohnt sich das trotzdem?","Was sagt eine kurze Fluchtdistanz über die Geschichte eines Ortes aus?","Ist ein Tier, das keine Angst vor Menschen hat, noch ein Wildtier?"]},
+
+ {code:"TI 3",gruppe:"Tiere",
+  frage:"Was ändert sich im Nationalpark, seit der Wolf zurück ist?",
+  ort:"Offene Fläche mit Übersicht, zum Beispiel Margunet oder Buffalora",
+  sehen:["Zeigt im Gelände, wo ein Hirsch bei Wolfspräsenz vermutlich nicht mehr lange grasen würde.","Begründet eure Auswahl mit Deckung, Sicht und Fluchtweg."],
+  reden:["Der Park greift grundsätzlich nicht ein. Gilt das auch, wenn dadurch eine Art verschwindet?","Wer trägt die Kosten der Rückkehr des Wolfs, wer den Nutzen?","Welche Daten bräuchte man, um den Satz «der Wolf verändert die Vegetation» zu belegen?"]},
+
+ {code:"TI 4",gruppe:"Tiere",
+  frage:"Ein Vogel, der fast nur Knochen frisst – wie funktioniert das, und warum blieb seine Nische hier so lange leer?",
+  ort:"Val Stabelchod oder Val Mingèr, mit Blick auf die Felswände",
+  sehen:["Sucht mit dem Feldstecher die Felswände und den Himmel ab.","Haltet von jedem Grossvogel Flügelform, Schwanzform und Flugbild fest."],
+  reden:["Warum blieb diese Nische jahrzehntelang unbesetzt, obwohl Knochen genug da waren?","Eine Wiederansiedlung ist ein Eingriff. Passt das zu einem Park, der nicht eingreift?","Was passiert mit den Knochen an einem Ort ohne Bartgeier?"]},
+
+ {code:"TI 5",gruppe:"Tiere",
+  frage:"Warum ist es auf den Murmeltierhängen im Oktober so still?",
+  ort:"Murmeltierhang, zum Beispiel Val dal Botsch oder Alp la Schera",
+  sehen:["Sucht verschlossene Baueingänge und frische Erdaushübe.","Zählt, wie viele Pfiffe ihr in zehn Minuten hört, und notiert die Uhrzeit."],
+  reden:["Was passiert mit einem Winterschläfer, wenn die Winter kürzer und wärmer werden?","Warum halten Hirsche und Steinböcke keinen Winterschlaf?","Wie würdet ihr messen, ob Murmeltiere heute früher aufwachen als vor fünfzig Jahren?"]},
+
+ {code:"WA 1",gruppe:"Wald",
+  frage:"Diese Alp wird seit über hundert Jahren nicht mehr genutzt. Warum ist hier immer noch Wiese und kein Wald?",
+  ort:"Alp Stabelchod, bei den Dauerbeobachtungsflächen",
+  sehen:["Messt die Rasenhöhe an fünf Stellen auf der offenen Fläche und an fünf Stellen am Waldrand.","Sucht Jungbäume und prüft sie auf Verbiss: abgerissene statt glatt abgeschnittene Triebspitzen."],
+  reden:["Was genau hindert den Wald daran zurückzukommen?","Wenn Hirsche die Fläche offen halten – wer hält dann die Hirsche in Schach?","Wäre es ein Erfolg oder ein Verlust für den Park, wenn hier Wald wüchse?"]},
+
+ {code:"WA 2",gruppe:"Wald",
+  frage:"Hier wird seit 1914 nichts mehr gemacht. Warum sieht der Wald am Ofenpass trotzdem so eintönig aus?",
+  ort:"Il Fuorn oder Champlönch",
+  sehen:["Schätzt an drei Stellen das Alter der Bäume, indem ihr die Astquirle zählt.","Vergleicht die Stammdurchmesser: gleichaltriger Bestand oder gemischt?"],
+  reden:["Was heisst «unberührt», wenn der Wald vor 150 Jahren abgeholzt war?","Wie lange dauert es, bis ein Wald wieder wild ist – und wer entscheidet das?","Würde man den Park heute an derselben Stelle gründen?"]},
+
+ {code:"WA 3",gruppe:"Wald",
+  frage:"Wandert die Waldgrenze nach oben – und woher wollen wir das wissen?",
+  ort:"Waldgrenze am Margunet oder im Val dal Botsch",
+  sehen:["Steckt oberhalb des geschlossenen Waldes eine Fläche von etwa 20 mal 20 Metern ab.","Zählt alle Jungbäume darin und schätzt ihr Alter an den Astquirlen."],
+  reden:["Zwei Erklärungen konkurrieren: Klimaerwärmung und aufgegebene Alpnutzung. Wie könnte man sie trennen?","Warum lässt sich das an einem einzigen Ort kaum entscheiden?","Ist eine steigende Waldgrenze eine gute oder eine schlechte Nachricht? Für wen?"]},
+
+ {code:"PR 1",gruppe:"Prozesse",
+  frage:"Warum sind in manchen Jahren ganze Lärchenhänge mitten im Sommer braun?",
+  ort:"Lärchenbestand, zum Beispiel Val Cluozza oder Val Trupchun",
+  sehen:["Sucht an Lärchennadeln nach Frassspuren und Gespinsten.","Vergleicht Bäume am Sonn- und am Schattenhang und notiert Unterschiede."],
+  reden:["Warum überlebt eine Lärche einen Kahlfrass, eine Fichte aber kaum?","Ist der Lärchenwickler ein Schädling? Für wen genau?","Was würde geschehen, wenn man ihn im Park bekämpfte?"]},
+
+ {code:"PR 2",gruppe:"Prozesse",
+  frage:"Nach Feuer, Lawine oder Murgang räumt hier niemand auf. Was passiert dann?",
+  ort:"Brandfläche bei Il Fuorn oder eine Murgangrinne am Weg",
+  sehen:["Vergleicht Bewuchs, Artenzahl und Baumhöhe auf der Störungsfläche mit dem Nachbarbestand.","Fotografiert beide Flächen vom gleichen Standort aus."],
+  reden:["Eine Störung wirkt zerstörerisch. Wer oder was profitiert davon?","Warum wird hier nicht aufgeforstet, im Wirtschaftswald aber schon?","Woran erkennt man nach 75 Jahren noch, dass es gebrannt hat?"]},
+
+ {code:"GW 1",gruppe:"Gestein & Wasser",
+  frage:"Die Berge hier heissen Munt oder Piz. Wer entscheidet, welcher Name wohin gehört?",
+  ort:"Aussichtspunkt mit Rundblick, zum Beispiel Munt la Schera oder Margunet",
+  sehen:["Zeigt der Gruppe drei Munt und drei Piz, ohne die Namen zu nennen, und lasst sie zuordnen.","Löst auf und zeigt danach euer Gegenbeispiel."],
+  reden:["Was verrät ein Bergname über die Menschen, die ihn vergeben haben?","Warum tragen die Berge hier romanische und keine deutschen Namen?","Sind solche Namen eine Beschreibung der Landschaft oder blosser Zufall?"]},
+
+ {code:"GW 2",gruppe:"Gestein & Wasser",
+  frage:"Warum wächst auf dem hellen Schutt fast nichts?",
+  ort:"Dolomitschutthalde am Margunet oder im Val dal Botsch",
+  sehen:["Fühlt oder messt die Temperatur des Schutts an Sonne und Schatten und notiert den Unterschied.","Legt die Wurzel einer Pflanze vorsichtig frei, zeichnet sie und deckt sie wieder zu."],
+  reden:["Was ist hier knapper: Wasser, Nährstoffe oder Halt?","Der Schutt ist auffallend hell. Was folgt daraus für die Pflanzen?","Warum gilt eine so karge Fläche als schützenswert?"]},
+
+ {code:"GW 3",gruppe:"Gestein & Wasser",
+  frage:"Warum hat man in einem Nationalpark künstliche Hochwasser erzeugt – und warum ist der Spöl jetzt eine Baustelle?",
+  ort:"Spöl bei Punt Periv oder Il Fuorn. Wegzustand vorher prüfen: Teile der Route 10 sind gesperrt.",
+  sehen:["Beschreibt das Bachbett: Korngrössen, Algenbelag, Verfestigung der Sohle, Uferbewuchs.","Zeigt eine Stelle, an der eine Bachforelle laichen könnte, und begründet sie."],
+  reden:["Ist ein Bach, dessen Hochwasser ein Kraftwerk auslöst, noch natürlich?","Der Park greift sonst nicht ein. Warum hier doch?","Wer hätte den Schaden getragen, wenn ihn niemand entdeckt hätte?"]},
+
+ {code:"GW 4",gruppe:"Gestein & Wasser",
+  frage:"Warum liegen auf Macun so viele kleine Seen nebeneinander – und warum gehört das Gebiet erst seit 2000 zum Park?",
+  ort:"Seenplatte Macun. Langer, harter Tag. Ersatzweise Kartenarbeit im Nationalparkzentrum Zernez.",
+  sehen:["Vergleicht drei Seen nach Grösse, Farbe und Ufervegetation.","Stellt für jeden eine Hypothese zur Tiefe auf und begründet sie."],
+  reden:["Warum sind solche Seen gute Messgeräte für das Klima?","Was passiert mit ihnen, wenn der Permafrost in den Blockgletschern taut?","Warum erweitert man einen Park 86 Jahre nach der Gründung?"]},
+
+ {code:"MS 1",gruppe:"Mensch & Schutz",
+  frage:"Warum räumt hier niemand die umgestürzten Bäume weg?",
+  ort:"Beliebiger Windwurf oder Käferbestand am Weg",
+  sehen:["Untersucht drei Totholzstücke in verschiedenen Zerfallsstadien.","Notiert alles, was ihr an Lebewesen, Frassgängen, Pilzen und Moosen findet."],
+  reden:["Ausserhalb hiesse das Schadholz. Warum hier nicht?","Wo endet das Nichteingreifen: Dürfen Wege freigesägt werden? Dürfen Wege überhaupt sein?","Was ginge verloren, wenn man aufräumte?"]},
+
+ {code:"MS 2",gruppe:"Mensch & Schutz",
+  frage:"Mitten durch das strengste Schutzgebiet der Schweiz führt eine Kantonsstrasse. Wie passt das zusammen?",
+  ort:"Il Fuorn oder an einer Parkgrenze am Weg",
+  sehen:["Zählt an einem Standort alles, was von Menschen gemacht ist: Weg, Schild, Strasse, Leitung, Gebäude, Lärm.","Stellt der Gruppe zwei Schutzregeln vor und lasst sie begründen, bevor ihr die offizielle Begründung nennt."],
+  reden:["Welche Regel würdet ihr abschaffen, welche verschärfen?","Warum darf man keinen Stein mitnehmen, wenn ein Stein doch nichts spürt?","Wie weit trägt der Verkehrslärm in den Park hinein – und ist Lärm eine Form von Verschmutzung?"]}
+];
+
+const GRUPPEN = ["Alle", ...[...new Set(KARTEN.map(k=>k.gruppe))]];
+let aktiv = "Alle";
+
+const elFilter = document.getElementById("filter");
+const elKarten = document.getElementById("karten");
+const elZaehler = document.getElementById("zaehler");
+
+GRUPPEN.forEach(g=>{
+  const b=document.createElement("button");
+  b.textContent=g; b.setAttribute("aria-pressed", g===aktiv);
+  b.onclick=()=>{aktiv=g;zeichnen();};
+  elFilter.appendChild(b);
+});
+const wuerfel=document.createElement("button");
+wuerfel.textContent="Karte ziehen"; wuerfel.className="wuerfel";
+wuerfel.onclick=()=>{
+  const sichtbar=[...elKarten.querySelectorAll(".karte")];
+  if(!sichtbar.length) return;
+  sichtbar.forEach(k=>k.classList.remove("offen","treffer"));
+  const z=sichtbar[Math.floor(Math.random()*sichtbar.length)];
+  z.classList.add("offen","treffer");
+  z.scrollIntoView({behavior:"smooth",block:"center"});
+};
+elFilter.appendChild(wuerfel);
+
+function liste(items, cls){
+  return `<ul class="${cls||""}">`+items.map(t=>`<li>${t}</li>`).join("")+`</ul>`;
+}
+
+function zeichnen(){
+  [...elFilter.querySelectorAll("button")].forEach(b=>{
+    if(b.classList.contains("wuerfel")) return;
+    b.setAttribute("aria-pressed", b.textContent===aktiv);
+  });
+  const auswahl = aktiv==="Alle" ? KARTEN : KARTEN.filter(k=>k.gruppe===aktiv);
+  elZaehler.textContent = auswahl.length + (auswahl.length===1?" Karte":" Karten");
+  elKarten.innerHTML = auswahl.map((k,i)=>`
+    <article class="karte" id="k${i}">
+      <div class="kopfzeile"><span class="code">${k.code}</span><span class="gruppe">${k.gruppe}</span></div>
+      <button class="frage" aria-expanded="false" aria-controls="i${i}">${k.frage}</button>
+      <p class="hinweis">Tippen für Ort und Gesprächsfragen</p>
+      <div class="inhalt" id="i${i}">
+        <div class="feld"><p class="feldtitel">Ort</p><p class="ort">${k.ort}</p></div>
+        <div class="feld"><p class="feldtitel">Vor Ort anschauen</p>${liste(k.sehen)}</div>
+        <div class="feld"><p class="feldtitel">Darüber reden</p>${liste(k.reden,"reden")}</div>
+      </div>
+    </article>`).join("");
+
+  elKarten.querySelectorAll(".frage").forEach(btn=>{
+    btn.onclick=()=>{
+      const karte=btn.closest(".karte");
+      const auf=karte.classList.toggle("offen");
+      karte.classList.remove("treffer");
+      btn.setAttribute("aria-expanded", auf);
+      karte.querySelector(".hinweis").textContent = auf ? "Nochmals tippen zum Schliessen" : "Tippen für Ort und Gesprächsfragen";
+    };
+  });
+}
+zeichnen();
+</script>
+</body>
+</html>
